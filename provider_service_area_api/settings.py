@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_gis',
     'rest_framework_swagger',
+    'cachalot',
     'provider',
     'service_area',
 ]
@@ -135,3 +136,23 @@ REST_FRAMEWORK = {
 
 # Test runner with no database creation
 TEST_RUNNER = 'provider_service_area_api.test_utils.NoDbTestRunner'
+
+
+# CACHING
+# ------------------------------------------------------------------------------
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': ''
+    },
+    'cachalot': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': "redis://localhost:6379/9",
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'IGNORE_EXCEPTIONS': True,
+        },
+    },
+}
+CACHALOT_CACHE = 'cachalot'
+CACHALOT_ONLY_CACHABLE_TABLES = frozenset(('provider', 'servicearea'))
