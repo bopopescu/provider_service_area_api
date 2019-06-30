@@ -7,6 +7,7 @@ Built using
 * Python (Preferred 3.6)
 * Django
 * Postgresql
+* Redis
 
 Getting Started
 ----------------------
