@@ -15,15 +15,31 @@ Including another URLconf
 """
 # from django.contrib import admin
 # from django.urls import include, path
-from rest_framework import routers
+from django.conf.urls import url
+from rest_framework import routers, schemas, renderers, response
+from rest_framework.decorators import api_view, renderer_classes
+from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
+
 from provider.views import ProviderViewSet
 from service_area.views import ServiceAreaViewSet
+
+
+@api_view()
+@renderer_classes([SwaggerUIRenderer, OpenAPIRenderer, renderers.CoreJSONRenderer])
+def schema_view(request):
+    """
+    Auto API Documentation
+    """
+    generator = schemas.SchemaGenerator()
+    return response.Response(generator.get_schema(request=request))
+
 
 router = routers.DefaultRouter()
 router.register(r'providers', ProviderViewSet, base_name='providers')
 router.register(r'service-areas', ServiceAreaViewSet, base_name='service-areas')
 
 urlpatterns = router.urls
+urlpatterns.append(url(r'docs/', schema_view),)
 
 # urlpatterns = [
 #     path('admin/', admin.site.urls),
